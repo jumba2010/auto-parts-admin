@@ -39,9 +39,10 @@ export async function saveCurrentUser(latitude,longitude,contactPrefix,countryCo
 
 
 export async function getCurrentUser() {
-  let userdata={id:"3459345935",name:"Judiao Mbaua", 
+        let userdata = {id:"3459345935",name:"Judiao Mbaua", 
                 picture:"", address:"Av. Judiao Mbaua", email:"judiao.mbaua@gmail.com",
                 contact:"876767893",
+                sucursalId: "9a3f2a7c-733f-401c-b20a-6612470cdcd7",
                 location:{
                   longitude:23.44,
                   latitude:34.45

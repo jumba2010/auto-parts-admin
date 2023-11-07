@@ -45,6 +45,14 @@ const Login = props => {
       dispatch({
           type: 'user/fetchCurrent',
         });
+
+      dispatch({
+          type: 'product/fetchAll',
+          payload:{
+            sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7'
+          }
+        });
+
         //setAuthority(['admin'])
       // await signin(userName, password);
       // let user=await getCurrentUser();

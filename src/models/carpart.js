@@ -1,20 +1,16 @@
 import {
   findProductsBySucursal,
-  findStockBySucursal,
   findCategoriesBySucursal
   , findUnitiesBySucursal,
-  findTaxesBySucursal,
-  addTax, addProduct,updateProduct,
+  addProduct,updateProduct,
   deleteProduct
-} from '@/services/chickenbatch';
+} from '@/services/product';
 const ProductModel = {
   namespace: 'product',
   state: {
     products: [],
     categories: [],
-    unities: [],
     stocks: [],
-    taxes: [],
     currentProduct: {},
   },
   effects: {
@@ -57,27 +53,9 @@ const ProductModel = {
       });
     },
 
-    *fetchTaxes({ payload }, { call, put }) {
-      const response = yield call(findTaxesBySucursal, payload);
-      yield put({
-        type: 'queryTaxes',
-        payload: response,
-      });
-    },
-
     *create({ payload }, { call }) {
       yield call(addProduct, payload);
     },
-
-    *addTax({ payload }, { call, put }) {
-      yield call(addTax, payload);
-      const response = yield call(findTaxesBySucursal, payload.sucursalId);
-      yield put({
-        type: 'queryTaxes',
-        payload: response,
-      });
-    },
-
 
   },
   reducers: {

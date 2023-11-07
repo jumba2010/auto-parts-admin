@@ -16,6 +16,8 @@ const FormItem = Form.Item;
 import stockcolumns from '../utils/stockcolumns';
 import categories from '../utils/categories';
 
+import { deleteProduct } from '@/services/product';
+
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -39,7 +41,7 @@ const AutoPartsListing = (props) => {
   }
 
   const callback =(key) =>{
-    setDefaultActiveKey(key)
+   
   }
 
   const [form2] = Form.useForm();
@@ -72,7 +74,7 @@ const AutoPartsListing = (props) => {
         title: formatMessage({ id: 'product.category'}),
         dataIndex: 'category',
         valueType: 'text',
-        render: (val) => <div>{categories.filter((c)=>c.id===val.id)[0].name}</div>,
+        render: (_,record) => <div>{record.category.name}</div>,
       },
       {
         title: formatMessage({ id: 'product.availablequantity'}),
@@ -92,7 +94,7 @@ const AutoPartsListing = (props) => {
         title: formatMessage({ id: 'promotional.price'}),
         dataIndex: 'promotionalprice',
         valueType: 'text',
-        render:(text)=><div>{text} MZN</div>,
+        render:(text)=><div>{text==null?0:text} MZN</div>,
       },
     
       {
@@ -129,24 +131,25 @@ const AutoPartsListing = (props) => {
       },
     ];
 
-    const confirmvisibleDeleteProduct=()=>{
+    const confirmvisibleDeleteProduct =  async() =>{
       setLoadingProductDeletion(true);
-      dispatch({
-        type: 'product/delete',
-        payload: {
-          product
-        },
-      });
-      setVisibleDeleteProduct(false);
-      setLoadingProductDeletion(false);
-  
+
+      console.log(product.id)
+      await deleteProduct(product)
+      .then(data =>{
+        dispatch({
+          type: 'product/fetchAll',
+          payload:{
+            sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7'
+          }
+        });
+        setVisibleDeleteProduct(false);
+        setLoadingProductDeletion(false);
+      })
+   
     }
   
   useEffect(() => {
-    dispatch({
-      type: 'product/fetchCategories',
-      payload: 1,
-    });
 
     },[]);
 
@@ -279,7 +282,7 @@ title={  <Alert message={formatMessage({ id: 'delete.product.question'})} descri
   );
 };
 
-export default connect(({ user, loading }) => ({
+export default connect(({ user,product, loading }) => ({
   currentUser: user.currentUser,
-  loading: loading.effects['user/update'],
+  products: product.products,
 }))(AutoPartsListing);

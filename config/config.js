@@ -118,7 +118,7 @@ export default {
             {
               name: 'carparts',
               icon: 'car',
-              path: '/options/mantain',               
+              path: '/product/mantain',               
               component: './autoparts/mantain',
             },
 
@@ -131,6 +131,14 @@ export default {
               component: './autoparts/create',
             },
 
+
+            {
+              name: 'product.edit',
+              icon: 'add',
+              path: '/product/edit',
+              hideInMenu :true,                
+              component: './autoparts/edit',
+            },
           
             {
               name: 'clients',

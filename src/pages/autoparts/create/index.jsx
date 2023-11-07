@@ -11,6 +11,8 @@ import { connect } from 'dva';
 import {useDispatch} from  'react-redux';
 import {uploadFile,deleteFile} from '../../../utils/fileutils';
 import categories from '../utils/categories';
+import { createProduct } from '@/services/product';
+
 
 const formLayout = {
   labelCol: {
@@ -42,7 +44,7 @@ function getBase64(file) {
 
 const CreateProduct = props => {
 
-  const {vehicles=[],taxes=[],currentUser={} } = props;
+  const {vehicles=[],taxes=[],currentUser={},vhicles = [] } = props;
   const [formVals, setFormVals] = useState({
   });
   const [currentStep, setCurrentStep] = useState(0);
@@ -51,7 +53,7 @@ const CreateProduct = props => {
   const [success, setSuccess] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
   const [selectedRowKeys,setSelectedRowKeys]=useState([]);
-  const [selectedTaxes,setSelectedTaxes]=useState([]);
+  const [selectedKeyFeatures,setSelectedKeyFeatures]=useState([]);
   const [previewVisible,setPreviewVisible]= useState(false);
   const [previewImage,setPreviewImage]= useState('');
   const [previewTitle,setPreviewTitle]= useState('');
@@ -72,9 +74,16 @@ const CreateProduct = props => {
   const handleChange = async (info) => {
     setFileList(info.fileList);
     if (info.file.status === 'done') {
-      setFileList(fileList);
       let filename=await uploadFile(info.file.originFileObj);
-      let fileNamehistory={originalName:info.file.originFileObj.name,newName:filename};
+      if(filename){
+        fileList.forEach(fl =>{
+          fl.status ='done'
+        })
+      }
+     
+      setFileList(fileList);
+      
+      let fileNamehistory={originalFileName:info.file.originFileObj.name,url:filename.imageUrl};
       fileNameHistories.push(fileNamehistory);
       setFileNameHistories(fileNameHistories);
     }
@@ -121,8 +130,10 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   }
 
   const onRemove=(file)=>{
-   let newName=fileNameHistories.filter((fh)=>fh.originalName===file.originFileObj.name)[0].newName;
-    deleteFile(newName);
+    console.log(fileNameHistories)
+   let newName=fileNameHistories.filter((fh)=>fh.originalFileName===file.originFileObj.name)[0].url;
+   console.log(newName)
+   deleteFile(newName);
   }
 
   const restart=()=>{
@@ -131,7 +142,7 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     setNewTaxType(false);
     setSuccess(false);
     setSavingProduct(false);
-    setSelectedTaxes([]);
+    setFeatures([]);
     setSelectedRowKeys([]);
   }
   
@@ -141,7 +152,7 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
       {formatMessage({ id: 'addnew.product'})}
        
       </Button>
-      <Button onClick={()=>history.push('/product')}>
+      <Button onClick={()=>history.push('/product/mantain')}>
       {formatMessage({ id: 'list.products'})}
       </Button>
     </>
@@ -159,16 +170,7 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
-let selectedTaxes=[];
-    if(currentStep===2){
-      for (let index = 0; index < selectedRowKeys.length; index++) {
-        selectedTaxes=selectedTaxes.concat(taxes.filter((t)=>t.id===selectedRowKeys[index]))
 
-        
-      }
-setSelectedTaxes(selectedTaxes);
-
-    }
     forward();
 
   };
@@ -181,35 +183,43 @@ setSelectedTaxes(selectedTaxes);
   );
 
   const handleCreateProduct =async()=>{
-setSavingProduct(true);
-    let category=categories.filter((c)=>c.id===formVals.category)[0];
-    let filenames= fileNameHistories.map(a => a.newName);
-
-      dispatch({
-        type: 'product/create',
-        payload: {
+    setSavingProduct(true);
+    let category = categories.filter((c)=>c.id===formVals.category)[0];
+    console.log(category)
+   // let vhicle = vhicles.filter(v => v.id ===formVals.vhicle)[0];
+    await createProduct({
           description: formVals.description,
           name:formVals.name,
           category,
-          filenames,
+          filenames:fileNameHistories,
           sellprice:formVals.sellprice,
-          packagecount:formVals.packagecount,
           availablequantity:formVals.availablequantity,
           features:features,
           seller:currentUser,
-          createdBy:1,activatedBy:1,
-        },
-      });
+          sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+          createdBy:currentUser.id,activatedBy:currentUser.id,
+        }).then(data => {
+          
+          dispatch({
+            type: 'product/fetchAll',
+            payload:{
+              sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7'
+            }
+          });
+
+          setSuccess(true);
+          setSavingProduct(false);
+          forward();
+
+        });
 
 
-      setSuccess(true);
-      setSavingProduct(false);
-      forward();
+     
   }
 
   const renderContent = () => {
   const tailLayout={
-wrapperCol:{offset:5,span:16}
+    wrapperCol:{offset:5,span:16}
 
     }
 
@@ -323,17 +333,17 @@ wrapperCol:{offset:5,span:16}
                        <Descriptions.Item label={formatMessage({ id: 'product.availablequantity'})}>{formVals.availablequantity}</Descriptions.Item>
                       <Descriptions.Item label={formatMessage({ id: 'product.category'})}>{formVals.category && categories.length!=0?categories.filter((c)=>c.id===formVals.category)[0].name:''}</Descriptions.Item> 
                       <Descriptions.Item label={formatMessage({ id: 'product.price'})}>  <Statistic value= {formVals.sellprice} suffix="MZN" /> </Descriptions.Item>
-                      <Descriptions.Item label={formatMessage({ id: 'package.count'})}>{formVals.packagecount}</Descriptions.Item>
+                      <Descriptions.Item label={formatMessage({ id: 'product.vehicle'})}>{formVals.vehicle}</Descriptions.Item>
                      
                     </Descriptions>  
                     <Divider ></Divider> 
                     <h3 style={{'margin-top': '15px'}}>
-                    {formatMessage({ id: 'product.taxes'})}
+                    {formatMessage({ id: 'product.keyfeatures'})}
                     </h3> 
                    
           <Table 
           columns={columns}
-          dataSource={selectedTaxes}
+          dataSource={features}
         /> 
         </>
       );
@@ -391,21 +401,18 @@ wrapperCol:{offset:5,span:16}
         <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
       
       <Upload
-        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        onRemove={onRemove}
+        crossOrigin='anonymous'
       >
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
-
-
-
-
          
         </Form.Item>
       </Form.Item>

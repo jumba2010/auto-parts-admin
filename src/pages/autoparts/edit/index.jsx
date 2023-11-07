@@ -4,7 +4,6 @@ import { InboxOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 const { Step } = Steps;
 const { Option } = Select;
-const { Dragger } = Upload;
 import columns from '../components/taxcolumns';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -33,6 +32,14 @@ const tailLayout = {
   wrapperCol: { offset: 7, span: 16 },
 };
 
+const uploadButton = (
+  <div>
+    <PlusOutlined />
+    <div style={{ marginTop: 8 }}>Upload</div>
+  </div>
+);
+
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -58,13 +65,12 @@ const EditProduct = props => {
   const dispatch = useDispatch();
   const [fileNameHistories, setFileNameHistories]=useState([]);
   const history = useHistory();
+  const [features, setFeatures]=useState([]);
   const [formVals, setFormVals] = useState({
     description:currentProduct.description,
     name:currentProduct.name,
     sellprice:currentProduct.sellprice,
-    packagecount:currentProduct.packagecount,
     availablequantity:currentProduct.availablequantity,
-    unity:currentProduct.unity?currentProduct.unity.id:'',
     category:currentProduct.category?currentProduct.category.id:''
   });
 
@@ -74,8 +80,10 @@ const EditProduct = props => {
   };
 
   useEffect(() => {
-    setSelectedRowKeys(currentProduct.taxes?currentProduct.taxes.map(t=>t.id):[]);
-    fileList.push({url:currentProduct.filenames?currentProduct.filenames[0]:''});
+    currentProduct.filenames.forEach(fileName => {
+      fileList.push({url:fileName});
+    });
+   
 
    },{});
 
@@ -84,9 +92,16 @@ const EditProduct = props => {
   const handleChange = async (info) => {
     setFileList(info.fileList);
     if (info.file.status === 'done') {
-      setFileList(fileList);
       let filename=await uploadFile(info.file.originFileObj);
-      let fileNamehistory={originalName:info.file.originFileObj.name,newName:filename};
+      if(filename){
+        fileList.forEach(fl =>{
+          fl.status ='done'
+        })
+      }
+     
+      setFileList(fileList);
+      
+      let fileNamehistory={originalFileName:info.file.originFileObj.name,url:filename.imageUrl};
       fileNameHistories.push(fileNamehistory);
       setFileNameHistories(fileNameHistories);
     }
@@ -117,22 +132,17 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
 
   const saveNewType=async ()=>{
     const fieldsValue = await form2.validateFields();
-  setSaving(true);
-
-  dispatch({
-        type: 'product/addTax',
-        payload: {
-          description: fieldsValue.designation,
-          type:fieldsValue.type,
-          value:fieldsValue.value,
-          sucursalId:currentUser.id,
-          createdBy:currentUser.id,activatedBy:currentUser.id,
-        },
-      });
-
-      setSaving(false);
-      setNewTaxType(false);
-      form2.resetFields();
+    setSaving(true);
+    features.push({
+        name: fieldsValue.designation,
+        value:fieldsValue.value,
+      } );
+  
+      setFeatures(features);
+  
+        setSaving(false);
+        setNewTaxType(false);
+        form2.resetFields();
    
   }
 
@@ -147,7 +157,7 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     setNewTaxType(false);
     setSuccess(false);
     setSavingProduct(false);
-    setSelectedTaxes([]);
+    setFeatures([]);
     setSelectedRowKeys([]);
   }
   
@@ -157,7 +167,7 @@ setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
       {formatMessage({ id: 'addnew.product'})}
        
       </Button>
-      <Button onClick={()=>history.push('/product')}>
+      <Button onClick={()=>history.push('/product/mantain')}>
       {formatMessage({ id: 'list.products'})}
       </Button>
     </>
@@ -283,60 +293,44 @@ wrapperCol:{offset:5,span:16}
           if (currentStep === 2 && newTaxType===true) {
             return (
               <>
-              <Form {...layout} form={form2}> 
+             <Form {...layout} form={form2}> 
               
-      <FormItem
-                  name="designation"
-                  label={formatMessage({ id: 'tax.designation'})}
-                  rules={[
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'error.tax.designation.required'}),
-                    },
-                  ]}
-                >
-                  <Input
-              
-                    placeholder={formatMessage({ id: 'tax.designation'})}
-                  />
-                </FormItem>
-                <FormItem name="type" label={formatMessage({ id: 'tax.type'})}
-                rules={[
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'error.tax.type.required'}),
-                  },
-                ]}
-                >
-                <Select
-                    style={{
-                      width: '100%',
-                    }}
-                  >
-          <Option value="0">{formatMessage({ id: 'fixed.tax'})}</Option>
-                    <Option value="1">{formatMessage({ id: 'percentage.tax'})}</Option>
-                  </Select>
-                </FormItem>
-                <FormItem
-                  name="value"
-                  label={formatMessage({ id: 'tax.value'})}
-                  rules={[
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'error.tax.value.required'}),
-                    },
-                  ]}
-                >
-                  <Input type='number' />
-                </FormItem>
-                <FormItem {...tailLayout} >
-                <Button onClick={()=>setNewTaxType(false)} >{formatMessage({ id: 'global.cancel'})}</Button>
-                <Button type='primary' loading={saving} style={{'margin-left': '5px'}}  onClick={saveNewType}>{formatMessage({ id: 'global.save'})}</Button>
-                </FormItem>
-                </Form>
-             
-              </>
-            );
+              <FormItem
+                          name="designation"
+                          label={formatMessage({ id: 'keyfeature.name'})}
+                          rules={[
+                            {
+                              required: true,
+                              message: formatMessage({ id: 'error.keyfeature.name.required'}),
+                            },
+                          ]}
+                        >
+                          <Input
+                      
+                            placeholder={formatMessage({ id: 'keyfeature.name'})}
+                          />
+                        </FormItem>
+                  
+                        <FormItem
+                          name="value"
+                          label={formatMessage({ id: 'keyfeature.value'})}
+                          rules={[
+                            {
+                              required: true         ,
+                              message: formatMessage({ id: 'error.keyfeature.value.required'}),
+                            },
+                          ]}
+                        >
+                          <Input  />
+                        </FormItem>
+                        <FormItem {...tailLayout} >
+                        <Button onClick={()=>setNewTaxType(false)} >{formatMessage({ id: 'global.cancel'})}</Button>
+                        <Button type='primary' loading={saving} style={{'margin-left': '5px'}}  onClick={saveNewType}>{formatMessage({ id: 'global.save'})}</Button>
+                        </FormItem>
+                        </Form>
+                     
+                      </>
+                    );
           }
 
 
@@ -346,10 +340,8 @@ wrapperCol:{offset:5,span:16}
     <Button type='primary' style={{'margin-left': '76%','margin-button': '50px'}} onClick={addNewTaxType} >{formatMessage({ id: 'add.tax'})}</Button>
 <Table style={{'margin-top': '20px'}}
           columns={columns}
-          onSelectChange={onSelectChange }
-          rowSelection={rowSelection}
-          rowKey='id'
-          dataSource={taxes}
+          rowKey='name'
+          dataSource={features}
         />
        
         </>
@@ -404,7 +396,7 @@ wrapperCol:{offset:5,span:16}
     return (
       <>
        
-        <FormItem
+       <FormItem
           name="name"
           label={formatMessage({ id: 'product.name'})}
           rules={[
@@ -432,40 +424,38 @@ wrapperCol:{offset:5,span:16}
 
         <Form.Item label={formatMessage({ id: 'product.images'})}>
         <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-         
-        <Dragger {...props}
-         fileList={fileList}
-         onPreview={handlePreview}
-         onChange={handleChange}
-         onRemove={onRemove}
-        >
-    <p className="ant-upload-drag-icon">
-      <InboxOutlined />
-    </p>
-    <p className="ant-upload-text">{formatMessage({ id: 'click.to.upload'})}</p>
-    <p className="ant-upload-hint">
-    {formatMessage({ id: 'warning.upload'})}
-    </p>
-  </Dragger>
+      
+      <Upload
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
+        onRemove={onRemove}
+        crossOrigin='anonymous'
+      >
+        {fileList.length >= 8 ? null : uploadButton}
+      </Upload>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
          
         </Form.Item>
       </Form.Item>
 
-        <FormItem name="unity" label={formatMessage({ id: 'product.unity'})}  rules={[
+        <FormItem name="vehicle" label={formatMessage({ id: 'product.vehicle'})}  rules={[
             {
-              required: true,
-              message: formatMessage({ id: 'error.product.unity.required'}),
+              required: false
             },
           ]}
      
         >
-            <Select placeholder="Ex. Kg,g,l, ml, m,Un"
+            <Select placeholder="Type here ..."   
               style={{
                 width: '100%',
               }}
             >
              {
-                unities.length!=0?unities.map((u)=>
+                vehicles.length!=0?vehicles.map((u)=>
               <Option value={u.id}>{u.name}</Option>
                 ):null
 

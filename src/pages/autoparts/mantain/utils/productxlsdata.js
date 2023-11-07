@@ -8,8 +8,7 @@ datasource.forEach(p => {
   product.descriproduct=p.descriproduct;
   product.sellprice=p.sellprice;
   product.promotionalprice=p.promotionalprice;
-  product.category=categories.filter((c)=>c.id===p.category.id)[0].name
-  product.unity=p.unity.name;
+  product.category=p.category.name
   product.availablequantity=String(p.availablequantity).trim();
   data.push(product);
 });

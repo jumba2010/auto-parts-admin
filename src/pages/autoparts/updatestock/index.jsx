@@ -3,7 +3,6 @@ import { Form, Button,Input,Badge, Result,Select,Statistic,Descriptions,Card,Ste
 const FormItem = Form.Item;
 const { Step } = Steps;
 const { Option } = Select;
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useHistory,useParams } from "react-router-dom";
 
@@ -284,7 +283,6 @@ setSelectedTaxes(selectedTaxes);
   };
 
   return (
-    <PageHeaderWrapper>
       <Card  >
       <Steps
         style={{
@@ -314,7 +312,6 @@ setSelectedTaxes(selectedTaxes);
         {renderFooter()}
       </Form>
       </Card>
-   </PageHeaderWrapper>
   );
 };
 

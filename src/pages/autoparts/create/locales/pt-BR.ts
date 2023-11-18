@@ -7,7 +7,8 @@ export default {
   'add.keyfeature':'Adicionar Característica Chave',
   'product.vehicle':'Veículo',
   'product.keyfeatures':'Característica Chaves',
-
+  'product.special.offer':'Oferta especial',
+  'product.featured':'Producto em destaque',
   'global.cancel':'Cancelar',
   'global.next':'Proximo',
   'global.save':'Salvar',
@@ -16,6 +17,7 @@ export default {
   'add.tax':'Adicionar Características Chaves',
   'product.data':'Dados do Produto',
   'product.category':'Categoria',
+  'product.subcategory':'Sub-categoria',
   'error.product.name.required':'O nome do Produto é obrigatório!',
   'error.product.category.required':'A Categoria é obrigatória!',
   'error.product.alertquantity.required':'O Stock Minimo é obrigatório!',
@@ -39,5 +41,4 @@ export default {
   'product.deletion.not.confirmed':'Você não informou o nome do produto corretamente',
   'click.to.upload':'Clique ou largue as imagens dos produtos para fazer upload',
   'warning.upload':'É proibido o upload de imagens de outras empresas ou marcas de outras Empresas',
-  'package.count.description':'Número de itens por lote (ex. 6)'
 };

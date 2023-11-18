@@ -4,21 +4,21 @@ import { formatMessage } from 'umi-plugin-react/locale';
 
    var newList= statuslist.filter((s)=>s.code!=status);
    
-    if(status==='pending'){
-        return  newList.filter((s)=>s.code==='processing');
+    if(status==='PENDING'){
+        return  newList.filter((s)=>s.code==='PROCESSING');
     }
 
-    else  if(status==='processing'){
+    else  if(status==='PROCESSING'){
 
-        return  newList.filter((s)=>s.code==='ready');
+        return  newList.filter((s)=>s.code==='READY');
     }
-    else if(status==='ready'){
+    else if(status==='READY'){
 
-        return  newList.filter((s)=>s.code==='delivered' || s.code==='ontheway' );
+        return  newList.filter((s)=>s.code==='DELIVERED' || s.code==='ON_THE_WAY' );
     }
-    else  if(status==='ontheway'){
+    else  if(status==='ON_THE_WAY'){
 
-        return  newList.filter((s)=>s.code==='delivered');
+        return  newList.filter((s)=>s.code==='DELIVERED');
     }
 
     else{

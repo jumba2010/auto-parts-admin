@@ -139,6 +139,14 @@ export default {
               hideInMenu :true,                
               component: './autoparts/edit',
             },
+
+            {
+              name: 'product.view',
+              icon: 'add',
+              path: '/product/view',
+              hideInMenu :true,                
+              component: './autoparts/view',
+            },
           
             {
               name: 'clients',
@@ -155,17 +163,27 @@ export default {
             },
 
             {
-              name: 'reviews',
+              name: 'product.reviews',
               icon: 'star',
-              path: '/client/mantain',               
-              component: './client/mantain',
+              path: '/reviews/product',               
+              component: './reviews/product',
+            },
+
+
+            {
+              path: '/promotion',
+              icon: 'fire',
+              name: 'promotions',
+              component: './promotion/mantain',
+              
             },
 
             {
-              name: 'promotions',
-              icon: 'shopping',
-              path: '/client/mantain',               
-              component: './client/mantain',
+              name: 'promotion.create',
+              icon: 'add',
+              path: '/promotion/create',
+              hideInMenu :true,                
+              component: './promotion/create',
             },
 
             {

@@ -1,30 +1,35 @@
 import { formatMessage } from 'umi-plugin-react/locale';
 
   export  default function getStatus(status) {
-    if(status==='pending'){
+    if(status==='PENDING'){
 
         return formatMessage({ id: 'order.pending'});
     }
 
-    else  if(status==='processing'){
+    else  if(status==='PROCESSING'){
 
         return formatMessage({ id: 'order.preparing'});
     }
-    else if(status==='ontheway'){
+    else if(status==='ON_THE_WAY'){
 
         return formatMessage({ id: 'order.ontheway'});
     }
-    else  if(status==='delivered'){
+    else  if(status==='DELIVERED'){
 
         return formatMessage({ id: 'order.delivered'});
     }
 
-    else  if(status==='canceled'){
+    else  if(status==='CANCELED'){
 
         return formatMessage({ id: 'order.canceled'});
     }
 
-    else  if(status==='ready'){
+    else  if(status==='REFUNDED'){
+
+        return formatMessage({ id: 'order.refunded'});
+    }
+
+    else  if(status==='READY'){
 
         return formatMessage({ id: 'order.ready'});
     }

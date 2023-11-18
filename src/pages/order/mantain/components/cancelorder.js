@@ -1,4 +1,4 @@
-import { Button,Form,Modal,Alert,Select,Input} from 'antd';
+import { Button,Form,Modal,Alert,Input} from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 const { TextArea } = Input;
 const CancelOrder = ({cancelOrder,
@@ -10,7 +10,7 @@ const CancelOrder = ({cancelOrder,
       };
 
 return <Modal width={800}
-visible={visible}
+open={visible}
 title={  <Alert message={formatMessage({ id: 'order.update'})} description={formatMessage({ id: 'order.update.message'})} type="danger" showIcon />}
 footer={[
   <Button key="back" onClick={onClickBack}>

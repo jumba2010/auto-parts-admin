@@ -1,14 +1,13 @@
-import { PrinterOutlined, SaveOutlined } from '@ant-design/icons';
+import { PrinterOutlined } from '@ant-design/icons';
 import { Button, Avatar, message, Form, Select,Tooltip, Card, Badge, Typography, Table } from 'antd';
-import React, { useState, useRef, useEffect } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import React, { useState, useRef } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useDispatch } from 'react-redux';
 import { UserOutlined,EditTwoTone } from '@ant-design/icons';
 import getBadge from './utils/badje';
 import getStatus from './utils/status'
 import moment from 'moment';
-import dates from './../../../utils/dates';
+import {dates} from '../../../utils/DateTimeUtils';
 import filteredorderstatus from './utils/filteredorderstatus'
 import orderstatus from './../../../utils/orderstatus';
 import ConfirmOrder from './components/confirmorder';
@@ -18,6 +17,9 @@ import ExportXLS from '../../../components/ExportFile/exportXls';
 import getXLSColumns from '../mantain/utils/orderxlscolumns';      
 import getXLSData from '../mantain/utils/orderxlsdata';
 import { connect } from 'dva';
+import { updateOrder } from '@/services/order';
+
+
 const { Text } = Typography;
 const ListOrders = (props) => {
   const { orders = [] } = props;
@@ -28,34 +30,25 @@ const ListOrders = (props) => {
   const [lastdata, setLastdata] = useState([]);
   const [filterstatus, setFilterStatus] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  const [status, setStatus] = useState('');
   const [sorter, setSorter] = useState('');
   const dispatch = useDispatch();
-  const [loadingPromotionInativatio, setLoadingPromotionInativatio] = useState(false);
 
   const actionRef = useRef();
   const [form2] = Form.useForm();
   const [form] = Form.useForm();
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 16 }
-
-  }
-
-  const handleCancelvisibleDeleteProduct = async () => setVisibleDeleteProduct(false);
 
   const columns = [
 
     {
       title: formatMessage({ id: 'order.id' }),
-      dataIndex: 'id',
+      dataIndex: 'code',
       valueType: 'text',
     },
     {
       title: formatMessage({ id: 'order.client.image' }),
       dataIndex: 'imageURL',
       valueType: 'text',
-      render: (text) => <a>{text ? <image src='' /> : <Avatar size={40} icon={<UserOutlined />} />}</a>,
+      render: (text) => <a>{text ? <image src={text} /> : <Avatar size={40} icon={<UserOutlined />} />}</a>,
     },
     {
       title: formatMessage({ id: 'order.client' }),
@@ -126,47 +119,64 @@ const ListOrders = (props) => {
     },
   ];
 
-  const handleSearchByDates = () => {
-    const hide = message.loading('Processing...', 0);
-    // Dismiss manually and asynchronously
-    setTimeout(hide, 2500);
+  const handleSearchByDates = (dateEnum) => {
+    dispatch({
+      type: 'order/fetchOrders',
+      payload:{
+      sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+      dateEnum
+      }
+    });
   }
 
-  const handleSelectStatus = (value) => {
-    setStatus(value)
+  const handleSelectStatus = (status) => {
+    //This does not do anything anyway. 
+    //The curent status selected is obtained from the form
   }
 
   const confirmOrder = async () => {
 
     const fieldsValue = await form.validateFields();
     let status = orderstatus.filter((s) => s.code === fieldsValue.orderStatus)[0];
-    order.status = { id: status.id, status: status.code };
-    order.remarks = fieldsValue.remarks;
-    dispatch({
-      type: 'order/confirm',
-      payload: order,
-    });
+    updateOrder(order,{ status:{code: status.code, description: status.des},remarks: fieldsValue.remarks })
+    .then( data => {
+      setVisibleConfirm(false);  
+      dispatch({
+        type: 'order/fetchOrders',
+        payload:{
+        sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+        dateEnum:'TODAY'
+        }
+      });
 
-    setVisibleConfirm(false);
+      form2.resetFields();
+    })
+
+    
 
   }
 
   const cancelOrder = async () => {
 
     const fieldsValue = await form2.validateFields();
-    order.remarks = fieldsValue.remarks;
-    dispatch({
-      type: 'order/cancel',
-      payload: order,
-    });
+    let status = orderstatus.filter((s) => s.code === 'CANCELED')[0];
+    updateOrder(order,{ status:{code: status.code, description: status.des},remarks: fieldsValue.remarks })
+    .then( data => {
+      setVisibleCancel(false);
+      dispatch({
+        type: 'order/fetchOrders',
+        payload:{
+        sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+        dateEnum:'TODAY'
+        }
+      });
 
-
-    setVisibleCancel(false);
-
+      form2.resetFields();
+    })
+    
   }
 
   return (
-    <PageHeaderWrapper>
 
       <Card
 
@@ -174,7 +184,7 @@ const ListOrders = (props) => {
           <div style={{ 'margin-left': '0px' }}>
             <Select
               labelInValue
-              defaultValue={{ key: '1', value: formatMessage({ id: 'dates.today' }) }}
+              defaultValue={{ key: 'TODAY', value: formatMessage({ id: 'dates.today' }) }}
               style={{ 'margin-left': '0px', 'width': '35%' }}
               onChange={handleSearchByDates}
 
@@ -192,7 +202,7 @@ const ListOrders = (props) => {
                 }
 
                 else {
-                  let s = orders.filter(d => statuscodes.includes(d.status.status));
+                  let s = orders.filter(d => statuscodes.includes(d.status.code));
                   setLastdata(s);
                 }
 
@@ -246,7 +256,6 @@ const ListOrders = (props) => {
           cancelOrder={cancelOrder} />
 
       </Card>
-    </PageHeaderWrapper>
   );
 };
 

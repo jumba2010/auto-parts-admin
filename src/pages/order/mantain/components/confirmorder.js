@@ -2,7 +2,7 @@ import { Button,Form,Modal,Alert,Select,Input} from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 const { TextArea } = Input;
 const ConfirmOrderModal = ({confirmOrder,
-    onClickBack,form,canceled,
+    onClickBack,form,
     orderstatus,
     handleSelectStatus,
     visible}) => { 
@@ -12,7 +12,7 @@ const ConfirmOrderModal = ({confirmOrder,
       };
 
 return <Modal width={800}
-visible={visible}
+open={visible}
 title={  <Alert message={formatMessage({ id: 'order.update'})} description={formatMessage({ id: 'order.update.message'})} type="info" showIcon />}
 footer={[
   <Button key="back" onClick={onClickBack}>

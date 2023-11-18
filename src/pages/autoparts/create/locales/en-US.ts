@@ -15,6 +15,7 @@ export default {
   'add.keyfeature':'Add Key Feature',
   'product.data':'Produt Data',
   'product.category':'Category',
+  'product.subcategory':'Subcategory',
   'product.vehicle':'Vehicle',
   'product.keyfeatures':'Product Key Features',
   'error.product.name.required':'The product name is required!',
@@ -28,6 +29,9 @@ export default {
   'error.product.price.required':'The Product sell price is required!',
   'supplier':'Supplier',
   'supplier.name':'Supplier name',
+  'product.special.offer':'Special Offer',
+  'product.featured':'Featured product',
+
   'error.stock.quantity.required':'The Stock quantity is required!',
   'drag.images.to.upload':'Click or drag image to this area to upload',
   'upload.many.images':'you can drag one or mores images',
@@ -41,5 +45,4 @@ export default {
   'product.deletion.not.confirmed':'The name of the product you entered is not correct',
   'click.to.upload':'Click or drag file to this area to upload',
   'warning.upload':'Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files',
-  'package.count.description':'Number of Items per package (ex. 6)'
 };

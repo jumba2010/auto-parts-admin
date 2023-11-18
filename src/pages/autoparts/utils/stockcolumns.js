@@ -11,6 +11,22 @@ const stockcolumns = [
       valueType: 'text',
       render:(text)=><Text strong>{text}</Text>,
     },
+
+    {
+      title: formatMessage({ id: 'stock.price'}),
+      dataIndex: 'sellprice',
+      render:(_,record)=><div>{record.sellprice} MZN </div>,
+      sorter: true,
+
+    },
+
+    {
+      title: formatMessage({ id: 'stock.date'}),
+      dataIndex: 'createdAt',
+      sorter: true,
+      hideInForm: true,
+      render:(_,record)=><div>{moment(record.createdAt).format('DD-MM-YYYY')}</div>
+    },
     
     {
       title: formatMessage({ id: 'stock.quantity'}),
@@ -21,41 +37,19 @@ const stockcolumns = [
     },
 
     {
-      title: formatMessage({ id: 'stock.date'}),
-      dataIndex: 'createdAt',
-      sorter: true,
-      hideInForm: true,
-      render:(_,record)=><div>{moment(record.createdAt.toDate()).format('DD-MM-YYYY')}</div>
-    },
-    {
       title: formatMessage({ id: 'stock.available'}),
       dataIndex: 'availablequantity',
-      render:(_,record)=><div>{record.availablequantity} {record.unity} </div>
+      render:(_,record)=><div>{record.availablequantity} </div>
   
     },
-    {
-      title: formatMessage({ id: 'stock.type'}),
-      dataIndex: 'stocktype',
-      render:(_,record)=><div>{record.stocktype===1? <Badge  text={formatMessage({ id: 'stock.entrance'})} color="green" />:(record.stocktype===2? <Badge  text={formatMessage({ id: 'stock.exit'})} color="red" />: formatMessage({ id: 'stock.transfer'}))} </div>,
-      sorter: true,
-
+  
+       {
+      title: formatMessage({ id: 'stock.sold.quantity'}),
+      dataIndex: 'soldQuantity',
+      render:(_,record)=><div>{record.soldQuantity}  </div>
+  
     },
-
-    {
-      title: formatMessage({ id: 'package.count'}),
-      dataIndex: 'packagecount',
-      render:(_,record)=><div>{record.packagecount}  </div>,
-      sorter: true,
-
-    },
-    
-    {
-      title: formatMessage({ id: 'stock.price'}),
-      dataIndex: 'sellprice',
-      render:(_,record)=><div>{record.sellprice} MZN </div>,
-      sorter: true,
-
-    },
+   
 
 
   ];

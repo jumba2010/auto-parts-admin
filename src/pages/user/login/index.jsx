@@ -53,6 +53,21 @@ const Login = props => {
           }
         });
 
+        dispatch({
+          type: 'product/fetchStocks',
+          payload:{
+          sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7'
+          }
+        });
+
+        dispatch({
+          type: 'order/fetchOrders',
+          payload:{
+          sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+          dateEnum:'TODAY'
+          }
+        });
+
         //setAuthority(['admin'])
       // await signin(userName, password);
       // let user=await getCurrentUser();

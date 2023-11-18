@@ -1,4 +1,4 @@
-import { findOrders, cancelOrder,confirmOrder } from '@/services/order';
+import { findOrdersByDateInterval } from '@/services/order';
 const OrderModel = {
   namespace: 'order',
   state: {
@@ -6,22 +6,13 @@ const OrderModel = {
     currentOrder:{},
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
-        const response = yield call(findOrders,payload);
+    *fetchOrders({ payload }, { call, put }) {
+        const response = yield call(findOrdersByDateInterval,payload);
         yield put({
           type: 'queryOrders',
           payload: response,
         });
       },
-    
-    *confirm({ payload }, { call }) {
-      yield call(confirmOrder,payload);
-  
-    },
-
-    *cancel({ payload }, { call }) {
-      yield call(cancelOrder,payload);
-    },
   },
   reducers: {
     queryOrders(state, action) {

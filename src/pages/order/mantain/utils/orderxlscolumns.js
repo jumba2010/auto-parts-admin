@@ -1,7 +1,7 @@
 export default function getXLSColumns(columns){
 let cols=[]
 columns.forEach(col => {
-  if(col.dataIndex!='imageURL' && col.dataIndex!='option'){
+  if(col.dataIndex!='image' && col.dataIndex!='option'){
     let  column ={};
     if(col.dataIndex==='total' ){
       column.title=  col.title+' (MZN)'

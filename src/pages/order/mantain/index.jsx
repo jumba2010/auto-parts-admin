@@ -7,7 +7,7 @@ import { UserOutlined,EditTwoTone } from '@ant-design/icons';
 import getBadge from './utils/badje';
 import getStatus from './utils/status'
 import moment from 'moment';
-import {dates} from '../../../utils/DateTimeUtils';
+import {DateRangeKeys, dates} from '../../../utils/DateTimeUtils';
 import filteredorderstatus from './utils/filteredorderstatus'
 import orderstatus from './../../../utils/orderstatus';
 import ConfirmOrder from './components/confirmorder';
@@ -41,12 +41,12 @@ const ListOrders = (props) => {
 
     {
       title: formatMessage({ id: 'order.id' }),
-      dataIndex: 'code',
+      dataIndex: 'number',
       valueType: 'text',
     },
     {
       title: formatMessage({ id: 'order.client.image' }),
-      dataIndex: 'imageURL',
+      dataIndex: 'image',
       valueType: 'text',
       render: (text) => <a>{text ? <image src={text} /> : <Avatar size={40} icon={<UserOutlined />} />}</a>,
     },
@@ -54,7 +54,7 @@ const ListOrders = (props) => {
       title: formatMessage({ id: 'order.client' }),
       dataIndex: 'client',
       valueType: 'text',
-      render: (text) => <Text strong >{text.name}</Text>,
+      render: (_,record) => <Text strong >{record.client.firstName} {record.client.lastName}</Text>,
     },
 
 
@@ -63,12 +63,12 @@ const ListOrders = (props) => {
       dataIndex: 'status',
       width: 40,
       valueType: 'text',
-      render: (text) =><div> <Badge status={getBadge(text.status)} text={getStatus(text.status)} /></div>,
+      render: (text) =><div> <Badge status={getBadge(text)} text={getStatus(text)} /></div>,
     },
 
     {
       title: formatMessage({ id: 'order.items' }),
-      dataIndex: 'itemsCount',
+      dataIndex: 'quantity',
       valueType: 'text',
       render: (text) => <div>{text}</div>,
     },
@@ -81,15 +81,10 @@ const ListOrders = (props) => {
     },
 
     {
-      title: formatMessage({ id: 'order.remarks' }),
-      dataIndex: 'remarks',
-    },
-
-    {
-      title: formatMessage({ id: 'order.updatedAt' }),
-      dataIndex: 'updatedAt',
+      title: formatMessage({ id: 'auditing.date' }),
+      dataIndex: 'createdAt',
       valueType: 'text',
-      render: (text) => <div>{moment((new Date(parseInt(text)))).format('DD-MM-YYYY HH:mm')}</div>,
+      render: (text) => <div>{text}</div>,
     },
 
     {
@@ -100,8 +95,6 @@ const ListOrders = (props) => {
       fixed: 'right',
       render: (_, record) => (
         <>
-
-
 
       <Tooltip placement="top" title= {formatMessage({ id: 'order.update.status' })}>
       <a onClick={() => {
@@ -145,7 +138,7 @@ const ListOrders = (props) => {
         type: 'order/fetchOrders',
         payload:{
         sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-        dateEnum:'TODAY'
+        dateEnum:DateRangeKeys.TODAY
         }
       });
 
@@ -167,7 +160,7 @@ const ListOrders = (props) => {
         type: 'order/fetchOrders',
         payload:{
         sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-        dateEnum:'TODAY'
+        dateEnum:DateRangeKeys.TODAY
         }
       });
 

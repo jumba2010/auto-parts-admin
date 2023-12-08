@@ -31,8 +31,8 @@ const ViewProduct = props => {
     name: currentProduct.name,
     sellprice: currentProduct.sellprice,
     availablequantity: currentProduct.availablequantity,
-    category: currentProduct.category ? currentProduct.category.id : '',
-    subcategory: currentProduct.subcategory ? currentProduct.subcategory.id : '',
+    category: currentProduct.category ? currentProduct.category.name : '',
+    subcategory: currentProduct.subcategory ? currentProduct.subcategory.name : '',
     featured: currentProduct.featured,
     specialOffer: currentProduct.specialOffer,
     features: currentProduct.features,
@@ -115,8 +115,8 @@ const ViewProduct = props => {
         <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
           <Descriptions.Item label="Nome">{product.name}</Descriptions.Item>
           <Descriptions.Item label={formatMessage({ id: 'product.availablequantity' })}>{product.availablequantity}</Descriptions.Item>
-          <Descriptions.Item label={formatMessage({ id: 'product.category' })}>{product.category ? product.category.name : ''}</Descriptions.Item>
-          <Descriptions.Item label={formatMessage({ id: 'product.subcategory' })}>{product.subcategory ? product.subcategory.name : ''}</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'product.category' })}>{product.category }</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'product.subcategory' })}>{product.subcategory}</Descriptions.Item>
           <Descriptions.Item label={formatMessage({ id: 'product.price' })}>  <Statistic value={product.sellprice} suffix="MZN" /> </Descriptions.Item>
           <Descriptions.Item label={formatMessage({ id: 'product.vehicle' })}>{product.vehicle}</Descriptions.Item>
         </Descriptions>
@@ -139,10 +139,9 @@ const ViewProduct = props => {
   const renderFooter = () => {
     return (
       <>
-        {newTaxType === false && success === false ?
           <FormItem {...tailLayout}>
-            <Button type='danger' onClick={() => history.goBack()}>{formatMessage({ id: 'global.cancel' })}</Button>
-          </FormItem> : null}
+            <Button type='danger' onClick={() => history.goBack()}>{formatMessage({ id: 'global.back' })}</Button>
+          </FormItem>
 
       </>
     );

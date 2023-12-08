@@ -1,9 +1,9 @@
 
 
 
-import { PrinterOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, PlusOutlined } from '@ant-design/icons';
 import { EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
-import { Button, Checkbox, Input, Typography, Form, Tabs, Card, Modal, Select, Alert, Badge, notification, Table } from 'antd';
+import { Button, Checkbox, Input,Descriptions, Typography, Form, Tabs, Card, Modal, Select, Alert, Badge, notification, Table } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useHistory } from "react-router-dom";
@@ -14,7 +14,7 @@ import getXLSColumns from './utils/productxlscolumns';
 import getXLSData from './utils/productxlsdata';
 const FormItem = Form.Item;
 import stockcolumns from '../utils/stockcolumns';
-import categories from '../utils/categories';
+import {categories} from '../utils/categories';
 
 import { deleteProduct,addNewStock } from '@/services/product';
 
@@ -24,7 +24,7 @@ const { TabPane } = Tabs;
 const { Text } = Typography;
 
 const AutoPartsListing = (props) => {
-  const { products = [], stocks = [], fetching } = props;
+  const { products = [], stocks = [] } = props;
   const [sorter, setSorter] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
@@ -37,6 +37,11 @@ const AutoPartsListing = (props) => {
   const [formVals, setFormVals] = useState({})
 
   const actionRef = useRef();
+
+
+  useEffect(() => {
+   
+  }, []);
 
   const addProduct = () => {
     history.push('/product/create');
@@ -102,12 +107,17 @@ const AutoPartsListing = (props) => {
       render: (text) => <img style={{ width: '60px', height: '60px', 'vertical-align': 'middle', 'opacity': '0.9' }} alt="Image" src={text[0]} />,
     },
 
-
     {
       title: formatMessage({ id: 'product.name' }),
       dataIndex: 'name',
       valueType: 'text',
-      render: (text) => <a href='/product/view'>{text}</a>,
+      render: (text,record) => <a  onClick={()=>{
+          dispatch({
+              type: 'product/setCurrentProduct',
+              payload: record,
+            });
+        history.push('/product/view');
+      }}>{text}</a>,
     },
 
     {
@@ -214,10 +224,6 @@ const AutoPartsListing = (props) => {
 
   }
 
-  useEffect(() => {
-
-  }, []);
-
   return (
     <Card title={<span>
       <div style={{ 'margin-left': '0px' }}>
@@ -231,7 +237,7 @@ const AutoPartsListing = (props) => {
             let s = products.filter(d => d.name.toLowerCase().indexOf(value.toLowerCase()) > -1);
             setLastdata(s);
           }}
-          style={{ width: '60%' }}
+          style={{ width: '50%' }}
         />
         <Select placeholder={formatMessage({ id: 'search.bycategory' })}
 
@@ -240,7 +246,7 @@ const AutoPartsListing = (props) => {
             setLastdata(s);
           }}
 
-          style={{ 'margin-left': '10px' }}>
+          style={{ 'margin-left': '5px' }}>
           {
             categories.length != 0 ? categories.map((u) =>
               <Option value={u.id}>{u.name}</Option>
@@ -251,11 +257,10 @@ const AutoPartsListing = (props) => {
         </Select></div>
     </span>} extra={<span>
       <>
-        <Button size='middle' type='primary' icon={<PlusOutlined />} onClick={addProduct}>  {formatMessage({ id: 'product.add' })}</Button>
-        <Button size='middle' type='primary' onClick={() => {
+        <Button style={{ 'margin-left': '10px' }} size='middle' type='primary' icon={<PlusOutlined />} onClick={addProduct}>  {formatMessage({ id: 'product.add' })}</Button>
+        <Button  style={{ 'margin-left': '5px' }} size='middle'  onClick={() => {
           setUpdateStock(true)
-        }} style={{ 'margin-left': '10px' }}> <PlusOutlined /> {formatMessage({ id: 'stock.add' })}</Button>
-        <Button size='middle' onClick={() => { history.push('/report') }} style={{ 'margin-left': '10px' }}> <PrinterOutlined /> {formatMessage({ id: 'product.print' })}</Button>
+        }} > <PlusSquareOutlined   style={{ fontSize: '16px', color: '#13cf7d' }}/> {formatMessage({ id: 'stock.add' })}</Button>
         <ExportXLS dataset={getXLSData(lastdata.length == 0 ? products : lastdata)} sheetName={formatMessage({ id: 'product.list' })} collumns={getXLSColumns(productcolumns)} />
 
       </>
@@ -267,7 +272,6 @@ const AutoPartsListing = (props) => {
             size='middle'
             actionRef={actionRef}
             rowKey="id"
-            loading={fetching}
             search={false}
             onChange={(_, _filter, _sorter) => {
               const sorterResult = _sorter;
@@ -352,7 +356,7 @@ const AutoPartsListing = (props) => {
             open={updateStock}
             title={formatMessage({ id: 'stock.update' })}
             footer={[
-              <Button key="back" onClick={setUpdateStock(false)}>
+              <Button key="back" onClick={() => setUpdateStock(false)}>
                 {formatMessage({ id: 'global.cancel' })}
               </Button>,
               <Button key="submit" type="primary" onClick={addStock} >
@@ -360,7 +364,7 @@ const AutoPartsListing = (props) => {
               </Button>,
             ]}
             closable={false}
-            onCancel={setUpdateStock(false)}
+            onCancel={()=>setUpdateStock(false)}
           >
             <Form {...layout} form={form2}>
               <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
@@ -404,4 +408,5 @@ const AutoPartsListing = (props) => {
 export default connect(({ user, product, loading }) => ({
   currentUser: user.currentUser,
   products: product.products,
+  stocks: product.stocks,
 }))(AutoPartsListing);

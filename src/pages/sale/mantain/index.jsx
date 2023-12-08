@@ -16,6 +16,7 @@ import getXLSData from '../mantain/utils/paymentxlsdata';
 import expandedRowRender from '@/components/Product/productitems';
 import { confirmPayment,refundPayment } from '@/services/sale';
 import { paymentMethods } from './utils/PaymentUtils';
+import { DateRangeKeys } from '@/utils/DateTimeUtils';
 const { TabPane } = Tabs;
 
 const ListSales = (props) => {
@@ -102,7 +103,7 @@ const ListSales = (props) => {
           type: 'order/fetchOrders',
           payload:{
           sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-          dateEnum:'TODAY'
+          dateEnum:DateRangeKeys.TODAY
           }
         });
         form.resetFields();
@@ -125,7 +126,7 @@ const ListSales = (props) => {
           type: 'sale/fetchRefundedPayments',
           payload:{
           sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-          dateEnum:'THIS_MONTH'
+          dateEnum:DateRangeKeys.THIS_MONTH
           }
         });
         setVisibleRefund(false);

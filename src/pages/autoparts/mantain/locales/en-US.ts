@@ -36,8 +36,6 @@ export default {
   'import.stock':'Import Stock',
   'print.stock':'Print Stock',
   'stock.entrance':'Entrance',
-  'stock.add':'Add Stock',
-  'stock.quantity.required':'The Stock quantity is required',
   'stock.exit':'Exit',
   'stock.transfer':'Stock Transfer',
   'stock.history':'Stock History',
@@ -46,7 +44,12 @@ export default {
   'product.image':'Image',
   'product.search':'Search product...',
   'search.bycategory':'Search by Category...',
-  'product.featured':'Em destaque',
+  'product.featured':'Featured',
+  'product.specialoffer': 'Special offer',
+  'stock.quantity.required':'The Stock quantity is required',
+  'stock.add':'Add Stock',
+
+
 
   //Categories
   'category.1':'Headlights & Lights',

@@ -147,19 +147,12 @@ export default {
               hideInMenu :true,                
               component: './autoparts/view',
             },
-          
-            {
-              name: 'clients',
-              icon: 'user',
-              path: '/client/mantain',               
-              component: './client/mantain',
-            },
 
             {
               name: 'orders',
               icon: 'shopping-cart',
-              path: '/client/mantain',               
-              component: './client/mantain',
+              path: '/order/mantain',               
+              component: './order/mantain',
             },
 
             {
@@ -169,6 +162,26 @@ export default {
               component: './reviews/product',
             },
 
+            {
+              name: 'product.wishlist',
+              icon: 'heart',
+              path: '/wishlist',               
+              component: './wishlist',
+            },
+
+            {
+              name: 'product.views',
+              icon: 'eye',
+              path: '/views',               
+              component: './views',
+            },
+
+            {
+              name: 'auditing',
+              icon: 'history',
+              path: '/auditing',               
+              component: './auditing',
+            },
 
             {
               path: '/promotion',

@@ -1,24 +1,24 @@
 
 export default function getBadge (status) {
-    if(status==='received'){
+    if(status==='PENDING'){
 
         return 'default';
     }
 
-    else  if(status==='processing'){
+    else  if(status==='PROCESSING'){
 
         return 'processing';
     }
-    else if(status==='ontheway'){
+    else if(status==='ON_THE_WAY'){
 
         return 'warning';
     }
 
-    else if(status==='canceled'){
+    else if(status==='CANCELLED'){
 
         return 'error';
     }
-   else  if(status==='delivered' || status==='ready'){
+   else  if(status==='DELIVERED' || status==='READY'){
 
         return 'success';
     }

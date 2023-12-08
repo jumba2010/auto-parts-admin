@@ -39,7 +39,7 @@ const Items = (
 
 return    <div style={{ marginTop: 20,marginBottom:10 }} >  
             <Descriptions title={formatMessage({ id: 'order.client'})}  column={2}  >
-            <Descriptions.Item label={formatMessage({ id: 'order.client.name'})}>{record.client.name}</Descriptions.Item>
+            <Descriptions.Item label={formatMessage({ id: 'order.client.name'})}>{record.client.firstName} {record.client.lastName}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'order.client.email'})}>{record.client.email}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'order.client.phone'})}>{record.client.phone}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'order.client.deliveraddress'})}>{record.client.deliveryaddress}</Descriptions.Item>

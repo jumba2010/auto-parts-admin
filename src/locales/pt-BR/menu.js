@@ -26,6 +26,13 @@ export default {
   'menu.exception.500': '500',
   'menu.clients':'Clientes',
   'menu.options': 'Opções',
-  'menu.users':'Utilizadores'
-
+  'menu.users':'Utilizadores',
+  'menu.product.wishlist': 'Lista de Desejos',
+  'menu.product.views': 'Vizualizações de Productos',
+  'menu.auditing': 'Auditoria',
+  'menu.product.create': 'Cadastrar Producto',
+  'menu.product.edit': 'Editar Producto',
+  'menu.product.reviews': 'Avaliações de Productos',
+  'menu.product.view': 'Vizualisações',
+  'menu.promotion.create': 'Adicionar Promoção',
 };

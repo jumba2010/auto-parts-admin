@@ -26,7 +26,7 @@ export default {
   'products.selected':'seleccionados',
   'products':'produtos',
   'product.stock':'Stock',
-  'product.availablequantity':'Quantidade adquerida',
+  'product.availablequantity':'Quantidade adquirida',
   'stock.update':'Actualizar Stock',
   'stock.sold.quantity':'Quantidade vendida',
   'product.import':'Importar',
@@ -47,7 +47,10 @@ export default {
   'product.image':'Imagem',
   'product.search':'Pesquisar Produto ...',
   'search.bycategory':'Pesquirar pela Categoria',
-  'product.featured':'Featured',
+  'product.featured':'Em destaque',
+  'product.specialoffer': 'Oferta especial',
+  'stock.quantity.required':'A quantidade é obrigatória',
+  'stock.add':'Adicionar Stock',
 
   //Categorias
   'category.1': 'Faróis e Luzes',

@@ -13,6 +13,7 @@ import api from '../../../services/api';
 import { setAuthority } from '@/utils/authority';
 import { signInWithGoogle,signin,sendVerificationEmail,getCurrentUser,saveCurrentUser } from "../../../services/user";
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginFrom;
+import { DateRangeKeys } from '@/utils/DateTimeUtils';
 
 const LoginMessage = ({ content }) => (
   <Alert
@@ -64,7 +65,15 @@ const Login = props => {
           type: 'order/fetchOrders',
           payload:{
           sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-          dateEnum:'TODAY'
+          dateEnum:DateRangeKeys.TODAY
+          }
+        });
+
+        dispatch({
+          type: 'sale/fetchRefundedPayments',
+          payload:{
+          sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+          dateEnum:DateRangeKeys.THIS_MONTH
           }
         });
 

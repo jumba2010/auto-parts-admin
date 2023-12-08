@@ -16,6 +16,7 @@ const OrderModel = {
   },
   reducers: {
     queryOrders(state, action) {
+      console.log(action)
       return {
         ...state,
         orders: action.payload,

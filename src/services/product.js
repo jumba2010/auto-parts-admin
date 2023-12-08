@@ -15,9 +15,10 @@ export async function updateProduct(product, payload) {
 }
 
 export async function findStockBySucursal(params) {
-  return API.get('/stock/' + params.sucursalId,
-    ).data;
-
+  let response = await   API.get('/stocks/' + params.sucursalId,
+    );
+    console.log('Stocks:',response.data)
+    return response.data;
     /* TODO: Paginations to be added later 
     {
       lastEvaluatedKey: params.lastEvaluatedKey,
@@ -27,9 +28,8 @@ export async function findStockBySucursal(params) {
 }
 
 export async function addNewStock(payload) {
-  return API.post('/stock/', payload);
+  return API.post('/stocks/', payload);
 }
-
 
 export async function deleteProduct(product) {
   return API.delete('/car-parts/' + product.id + '/' + product.createdAt);

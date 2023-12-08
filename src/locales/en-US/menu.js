@@ -29,6 +29,14 @@ export default {
   'menu.clients':'Clients',
   'menu.account.settings': 'Account Settings',
   'menu.options': 'Options',
-  'menu.users':'Users'
+  'menu.users':'Users',
+  'menu.product.wishlist': 'Product Wish List',
+  'menu.product.views': 'Product visualizations',
+  'menu.auditing': 'Auditing',
+  'menu.product.create': 'Create Product',
+  'menu.product.edit': 'Edit Product',
+  'menu.product.reviews': 'Reviews',
+  'menu.product.view': 'Product Vizualisations',
+  'menu.promotion.create': 'Add Promotion',
 
 };

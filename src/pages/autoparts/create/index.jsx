@@ -51,7 +51,7 @@ const CreateProduct = props => {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
@@ -299,7 +299,8 @@ const CreateProduct = props => {
 
           <FormItem {...tailLayout}>
             <Row>
-              <Col span={24}>
+            <Col span={3}/>
+              <Col span={21}>
                 <Checkbox
                   name="specialOffer"
                   checked={specialOffer}
@@ -504,6 +505,7 @@ const CreateProduct = props => {
               width: '100%',
             }}
             onChange={(category) => {
+    
               let subcategoriesSubset = subcategories.filter(s => s.categoryId === category);
               setSubcategoriesSubset(subcategoriesSubset);
 
@@ -539,7 +541,7 @@ const CreateProduct = props => {
             }}
           >
             {
-              subcategories.length != 0 ? subcategories.map((c) =>
+              subcategoriesSubset.length != 0 ? subcategoriesSubset.map((c) =>
                 <Option value={c.id} label={c.name}>
                   <div className="demo-option-label-item">
 
@@ -553,7 +555,8 @@ const CreateProduct = props => {
         </FormItem>
         <FormItem {...tailLayout}>
           <Row>
-            <Col span={24}>
+          <Col span={3}/>
+            <Col span={21}>
               <Checkbox
                 name="featured"
                 checked={featured}

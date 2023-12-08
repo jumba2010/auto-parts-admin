@@ -7,6 +7,7 @@ export default {
   'error.keyfeature.name.required':'The Key feature name is required!',
   'global.cancel':'Cancel',
   'global.next':'Next',
+  'global.back':'Back',
   'global.save':'Save',
   'global.confirm':'Confirm',
   'global.confirmation.step':'Confirmation',

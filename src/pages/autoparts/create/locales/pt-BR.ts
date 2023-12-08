@@ -11,6 +11,7 @@ export default {
   'product.featured':'Producto em destaque',
   'global.cancel':'Cancelar',
   'global.next':'Proximo',
+  'global.back':'Voltar',
   'global.save':'Salvar',
   'global.confirm':'Confirmar',
   'global.previous':'Anterior',

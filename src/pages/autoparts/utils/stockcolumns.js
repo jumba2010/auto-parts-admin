@@ -7,9 +7,8 @@ const stockcolumns = [
   
     {
       title: formatMessage({ id: 'stock.product'}),
-      dataIndex: 'productname',
-      valueType: 'text',
-      render:(text)=><Text strong>{text}</Text>,
+      dataIndex: 'product',
+      render:(_,record)=><Text strong>{record.product.name}</Text>,
     },
 
     {

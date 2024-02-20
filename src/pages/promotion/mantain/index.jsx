@@ -1,13 +1,14 @@
-import { PrinterOutlined,PlusOutlined ,SaveOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { Button, Card,Badge,Divider,Typography,Table} from 'antd';
 import React, { useState, useRef ,useEffect}   from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useHistory } from "react-router-dom";
 import { connect } from 'dva';
 import moment from 'moment';
 import {useDispatch} from  'react-redux';
 import  InativatePromotion from './components/inativatepromotionmodal';
+import { inativatePromotion } from '../../../services/promotion';
+
 
 const { Text } = Typography;
 const PromotionList = (props) => {
@@ -16,7 +17,6 @@ const PromotionList = (props) => {
   const history = useHistory();
   const [visible,setVisible]= useState(false);
   const [promotion, setPromotion] = useState({});
-  const[deisibleDeleteProduct,setVisibleDeleteProduct]= useState([]);
   const dispatch = useDispatch();
   const [loadingPromotionInativatio,setLoadingPromotionInativatio]= useState(false);
 
@@ -58,28 +58,6 @@ const PromotionList = (props) => {
       render:(text)=><div>{text} MZN</div>,
     },
    
-    {
-      title: formatMessage({ id: 'operations'}),
-      dataIndex: 'option',
-      key: 'operation',
-      valueType: 'option',
-      fixed: 'right',
-      render: (_, record) => (
-        <>
-       
-          <a
-            onClick={() => {
-              setVisible(true);
-              dispatch({
-                type: 'promotion/setCurrentPromotion',
-                payload: record,
-              });
-            }}
-          >{formatMessage({ id: 'product.remove'})}</a>
-      
-        </>
-      ),
-    },
   ];
 
 
@@ -96,14 +74,14 @@ const PromotionList = (props) => {
         title: formatMessage({ id: 'promotion.startdate'}),
         dataIndex: 'startdate',
         valueType: 'text',
-        render:(text)=><div>{moment(text.toDate()).format('DD-MM-YYYY HH:mm')}</div>,
+        render:(text)=><div>{moment(new Date(text)).format('DD-MM-YYYY HH:mm')}</div>,
       },
 
       {
         title: formatMessage({ id: 'promotion.enddate'}),
         dataIndex: 'enddate',
         valueType: 'text',
-        render:(text)=><div>{moment(text.toDate()).format('DD-MM-YYYY HH:mm')}</div>,
+        render:(text)=><div>{moment(new Date(text)).format('DD-MM-YYYY HH:mm')}</div>,
       },
 
       {
@@ -122,7 +100,7 @@ const PromotionList = (props) => {
       {
         title: formatMessage({ id: 'global.active'}),
         dataIndex: 'active',
-      render:(_,record)=><div>{record.active?<Badge color='green' text= {formatMessage({ id: 'global.yes'})}  /> :<Badge color='red' text= {formatMessage({ id: 'global.no'})}  /> }</div>
+      render:(_,record)=><div>{record.active && record.active =='1'?<Badge color='green' text= {formatMessage({ id: 'global.yes'})}  /> :<Badge color='red' text= {formatMessage({ id: 'global.no'})}  /> }</div>
     
       },
   
@@ -133,43 +111,41 @@ const PromotionList = (props) => {
         valueType: 'option',
         fixed: 'right',
         render: (_, record) => (
-          <>
-            <a onClick={() => {
-                setProduct(record);
-              }}
-            >
-              {formatMessage({ id: 'product.edit'})}
-            </a>
-  <Divider type="vertical" />
-            <a
+       
+        <>
+        <Divider type="vertical" />
+            <Button type='primary' size='small'
+            disabled={ !(record.active && record.active =='1')}
               onClick={() => {
-                setVisibleDeleteProduct(true);
-                dispatch({
-                  type: 'promotion/setCurrentPromotion',
-                  payload: record,
-                });
+                setVisible(true);
+                setPromotion(record)
               }}
-            >{formatMessage({ id: 'global.inativate'})}</a>
-        
-          </>
+            >{formatMessage({ id: 'global.inativate'})}</Button>
+            </>
         ),
       },
     ];
 
     const confirmvisibleDeleteProduct=()=>{
         setLoadingPromotionInativatio(true);
-        inativatePromotion(promotion);
-        setVisible(false);
-        setLoadingPromotionInativatio(false);
-  
+        inativatePromotion(promotion).then( data => {
+          setVisible(false);
+          setLoadingPromotionInativatio(false);
+          dispatch({
+            type: 'promotion/fetch',
+            payload: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+          });
+        });
+      
     }
   
 
   useEffect(() => {
     dispatch({
       type: 'promotion/fetch',
-      payload: currentUser.sucursals[0].id,
+      payload: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
     });
+    
 
     },[]);
   return (

@@ -16,4 +16,7 @@ export default {
   'global.inativate':'Inactivate',
   'error.processing.request.title':'There was an issue processing your reques',
   'error.processing.request.description':'There was an issue processing your reques. Please try again in a few seconds. If the issue persists, contact our support team',
+  'promotion.payload.undefined':'No enough data to create a promotion',
+  'promotion.products.not.defined':'Products not defined. Make sure to check all products or specify at least one product',
+  'product.in.active.promotion':'One of the products is in an active promotion',
 };

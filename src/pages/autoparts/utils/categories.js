@@ -13,7 +13,6 @@ export const categories = [
     { id: '10', name: formatMessage({ id: 'category.10' }) } // Steering
   ];
 
-
 export const subcategories = [
     { id: '101', name: formatMessage({ id: 'subcategory.1' }), categoryId: '01' }, // High Beam Lights
     { id: '102', name: formatMessage({ id: 'subcategory.2' }), categoryId: '01' }, // Low Beam Lights

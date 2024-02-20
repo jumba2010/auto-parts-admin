@@ -71,7 +71,7 @@ const WishList = (props) => {
             onChange={handleSearchByDates}
 
           >
-            {dates.map((d) => <Option value={d.key}>{d.des}</Option>)}
+            {dates.map((d) => <Option key={d.key}>{d.des}</Option>)}
 
           </Select>
 

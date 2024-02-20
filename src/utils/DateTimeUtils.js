@@ -11,12 +11,12 @@ export const DateRangeKeys = {
 };
 
 export const dates = [
-  { key: DateRangeKeys.TODAY, des: formatMessage({ id: 'dates.today' }) },
-  { key: DateRangeKeys.THIS_WEEK, des: formatMessage({ id: 'dates.thisweek' }) },
-  { key: DateRangeKeys.THIS_MONTH, des: formatMessage({ id: 'dates.thismonth' }) },
-  { key: DateRangeKeys.LAST_QUARTER, des: formatMessage({ id: 'dates.lastquarter' }) },
-  { key: DateRangeKeys.LAST_SEMESTER, des: formatMessage({ id: 'dates.lastsemester' }) },
-  { key: DateRangeKeys.THIS_YEAR, des: formatMessage({ id: 'dates.thisyear' }) },
+  { code: DateRangeKeys.TODAY, description: formatMessage({ id: 'dates.today' }) },
+  { code: DateRangeKeys.THIS_WEEK, description: formatMessage({ id: 'dates.thisweek' }) },
+  { code: DateRangeKeys.THIS_MONTH, description: formatMessage({ id: 'dates.thismonth' }) },
+  { code: DateRangeKeys.LAST_QUARTER, description: formatMessage({ id: 'dates.lastquarter' }) },
+  { code: DateRangeKeys.LAST_SEMESTER, description: formatMessage({ id: 'dates.lastsemester' }) },
+  { code: DateRangeKeys.THIS_YEAR, description: formatMessage({ id: 'dates.thisyear' }) },
 ];
 
 export const getDateInterval = (enumValue) => {

@@ -46,4 +46,6 @@ export default {
   'product.deletion.not.confirmed':'The name of the product you entered is not correct',
   'click.to.upload':'Click or drag file to this area to upload',
   'warning.upload':'Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files',
+
+  'inactivate.promotion.question':'Are you sure you want to inactivate this promotion?',
 };

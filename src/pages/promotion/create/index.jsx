@@ -4,7 +4,6 @@ import {
   Result, Checkbox, Select, Divider, Descriptions, Card,
   Table, Steps, notification
 } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useHistory } from "react-router-dom";
 import { connect } from 'dva';
@@ -60,7 +59,6 @@ const CreatePromotion = props => {
     if(!applytoall) {
 
       let selectedProducts = selectedKeys.map((id) => {
-
         let product = products.find((p) => p.id === id);
         let newProduct = { ...product };
 
@@ -106,16 +104,25 @@ const CreatePromotion = props => {
       enddate: formVals.period[1].toDate(),
       percentage,
       applytoall,
-      products: applytoall ? [] : selectedProducts,
-      sucursalId: currentUser.sucursalId,
+      products: applytoall ? products : selectedProducts,
+      sucursalId: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
       createdBy: currentUser.id, activatedBy: currentUser.id,
     }).then(data => {
       setSuccess(true);
       setSavingPromotion(false);
       forward();
+      dispatch({
+        type: 'product/fetchAll',
+        payload: {
+          sucursalId: '9a3f2a7c-733f-401c-b20a-6612470cdcd7'
+        }
+      });
+
+
     }).catch(err => {
+      console.log(err.response.data.message)
       notification.error({
-        description:  formatMessage({id:'error.processing.request.description'}),
+        description:  formatMessage({id:err.response.data.message}),
         message: formatMessage({id:'error.processing.request.title'}),
       });
     });
@@ -130,17 +137,14 @@ const CreatePromotion = props => {
 
     }
 
-
     if (currentStep === 1) {
       return (
         <>
           <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
-
             <Descriptions.Item label={formatMessage({ id: 'promotion.description' })}>{formVals.description}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'promotion.period' })}>{formVals.period[0].format('DD-MM-YYYY HH:mm')} {formatMessage({ id: 'promotion.to' })} {formVals.period[1].format('DD-MM-YYYY HH:mm')} </Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'promotion.percentage' })}>  {percentage} % </Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'promotion.apply.toall.products' })}> {applytoall ? formatMessage({ id: 'global.yes' }) : formatMessage({ id: 'global.no' })}</Descriptions.Item>
-
           </Descriptions>
           <Divider ></Divider>
           {applytoall ? null :
@@ -194,14 +198,10 @@ const CreatePromotion = props => {
             message: formatMessage({ id: 'promotion.period.required' }),
           },
         ]}
-
         >
-
-
           <RangePicker style={{ 'width': '100%' }}
             showTime={{ format: 'HH:mm' }}
             format="YYYY-MM-DD HH:mm"
-
           />
         </FormItem>
 
@@ -259,7 +259,6 @@ const CreatePromotion = props => {
       <>
 
         <FormItem {...tailLayout}>
-
           {currentStep === 1 ? <Button type='danger' onClick={() => setCurrentStep(0)}>{formatMessage({ id: 'global.previous' })}</Button> : null}
 
           {currentStep == 0 ? <Button type="primary" style={{ 'margin-left': '0px' }} onClick={() => handleNext()}>
@@ -275,7 +274,6 @@ const CreatePromotion = props => {
   };
 
   return (
-    <PageHeaderWrapper>
       <Card  >
         <Steps
           style={{
@@ -297,7 +295,7 @@ const CreatePromotion = props => {
           {renderFooter()}
         </Form>
       </Card>
-    </PageHeaderWrapper>
+  
   );
 };
 

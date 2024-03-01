@@ -1,20 +1,20 @@
 import { PrinterOutlined } from '@ant-design/icons';
-import { Button, Avatar, message, Form, Select,Tooltip, Card, Badge, Typography, Table } from 'antd';
+import { Button, Avatar, message, Form, Select, Tooltip, Card, Badge, Typography, Table } from 'antd';
 import React, { useState, useRef } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { useDispatch } from 'react-redux';
-import { UserOutlined,EditTwoTone } from '@ant-design/icons';
+import { UserOutlined, EditTwoTone } from '@ant-design/icons';
 import getBadge from './utils/badje';
 import getStatus from './utils/status'
 import moment from 'moment';
-import {DateRangeKeys, dates} from '../../../utils/DateTimeUtils';
+import { DateRangeKeys, dates } from '../../../utils/DateTimeUtils';
 import filteredorderstatus from './utils/filteredorderstatus'
 import orderstatus from './../../../utils/orderstatus';
 import ConfirmOrder from './components/confirmorder';
 import CancelOrder from './components/cancelorder';
 import expandedRowRender from '@/components/Product/productitems';
 import ExportXLS from '../../../components/ExportFile/exportXls';
-import getXLSColumns from '../mantain/utils/orderxlscolumns';      
+import getXLSColumns from '../mantain/utils/orderxlscolumns';
 import getXLSData from '../mantain/utils/orderxlsdata';
 import { connect } from 'dva';
 import { updateOrder } from '@/services/order';
@@ -54,7 +54,7 @@ const ListOrders = (props) => {
       title: formatMessage({ id: 'order.client' }),
       dataIndex: 'client',
       valueType: 'text',
-      render: (_,record) => <Text strong >{record.client.firstName} {record.client.lastName}</Text>,
+      render: (_, record) => <Text strong >{record.client.firstName} {record.client.lastName}</Text>,
     },
 
 
@@ -63,7 +63,7 @@ const ListOrders = (props) => {
       dataIndex: 'status',
       width: 40,
       valueType: 'text',
-      render: (text) =><div> <Badge status={getBadge(text)} text={getStatus(text)} /></div>,
+      render: (text) => <div> <Badge status={getBadge(text)} text={getStatus(text)} /></div>,
     },
 
     {
@@ -96,17 +96,17 @@ const ListOrders = (props) => {
       render: (_, record) => (
         <>
 
-      <Tooltip placement="top" title= {formatMessage({ id: 'order.update.status' })}>
-      <a onClick={() => {
-            setVisibleConfirm(true);
-            setOrder(record);
-            let list = filteredorderstatus(record.status.status, orderstatus);
-            setFilterStatus(list);
-          }}>
-      {<EditTwoTone  style={{ fontSize: '20px', color: '#1890ff' }}/>}
+          <Tooltip placement="top" title={formatMessage({ id: 'order.update.status' })}>
+            <a onClick={() => {
+              setVisibleConfirm(true);
+              setOrder(record);
+              let list = filteredorderstatus(record.status.status, orderstatus);
+              setFilterStatus(list);
+            }}>
+              {<EditTwoTone style={{ fontSize: '20px', color: '#1890ff' }} />}
 
-      </a>
-      </Tooltip>
+            </a>
+          </Tooltip>
         </>
       ),
     },
@@ -115,9 +115,9 @@ const ListOrders = (props) => {
   const handleSearchByDates = (dateEnum) => {
     dispatch({
       type: 'order/fetchOrders',
-      payload:{
-      sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-      dateEnum
+      payload: {
+        sucursalId: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+        dateEnum
       }
     });
   }
@@ -131,21 +131,21 @@ const ListOrders = (props) => {
 
     const fieldsValue = await form.validateFields();
     let status = orderstatus.filter((s) => s.code === fieldsValue.orderStatus)[0];
-    updateOrder(order,{ status:{code: status.code, description: status.des},remarks: fieldsValue.remarks })
-    .then( data => {
-      setVisibleConfirm(false);  
-      dispatch({
-        type: 'order/fetchOrders',
-        payload:{
-        sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-        dateEnum:DateRangeKeys.TODAY
-        }
-      });
+    updateOrder(order, { status: { code: status.code, description: status.des }, remarks: fieldsValue.remarks })
+      .then(data => {
+        setVisibleConfirm(false);
+        dispatch({
+          type: 'order/fetchOrders',
+          payload: {
+            sucursalId: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+            dateEnum: DateRangeKeys.TODAY
+          }
+        });
 
-      form2.resetFields();
-    })
+        form2.resetFields();
+      })
 
-    
+
 
   }
 
@@ -153,102 +153,104 @@ const ListOrders = (props) => {
 
     const fieldsValue = await form2.validateFields();
     let status = orderstatus.filter((s) => s.code === 'CANCELED')[0];
-    updateOrder(order,{ status:{code: status.code, description: status.des},remarks: fieldsValue.remarks })
-    .then( data => {
-      setVisibleCancel(false);
-      dispatch({
-        type: 'order/fetchOrders',
-        payload:{
-        sucursalId:'9a3f2a7c-733f-401c-b20a-6612470cdcd7',
-        dateEnum:DateRangeKeys.TODAY
-        }
-      });
+    updateOrder(order, { status: { code: status.code, description: status.des }, remarks: fieldsValue.remarks })
+      .then(data => {
+        setVisibleCancel(false);
+        dispatch({
+          type: 'order/fetchOrders',
+          payload: {
+            sucursalId: '9a3f2a7c-733f-401c-b20a-6612470cdcd7',
+            dateEnum: DateRangeKeys.TODAY
+          }
+        });
 
-      form2.resetFields();
-    })
-    
+        form2.resetFields();
+      })
+
   }
 
   return (
 
-      <Card
+    <Card
 
-        title={<span>
-          <div style={{ 'margin-left': '0px' }}>
-            <Select
-              labelInValue
-              defaultValue={{ key: 'TODAY', value: formatMessage({ id: 'dates.today' }) }}
-              style={{ 'margin-left': '0px', 'width': '35%' }}
-              onChange={handleSearchByDates}
+      title={<span>
+        <div style={{ 'margin-left': '0px' }}>
+          <Select
+            labelInValue
+            defaultValue={{ key: 'TODAY', value: formatMessage({ id: 'dates.today' }) }}
+            style={{ 'margin-left': '0px', 'width': '35%' }}
+            onChange={handleSearchByDates}
 
-            >
-              {dates.map((d) => <Option value={d.key}>{d.des}</Option>)}
+          >
+            {
+              dates.length != 0 ?
+              dates.map((d) => <Option value={d.code}>{d.description}</Option>) : null}
 
-            </Select>
-            <Select placeholder={formatMessage({ id: 'search.by.status' })}
-              mode="multiple"
-              onChange={(statuscodes) => {
+          </Select>
+          <Select placeholder={formatMessage({ id: 'search.by.status' })}
+            mode="multiple"
+            onChange={(statuscodes) => {
 
-                setSelectedKeys(statuscodes)
-                if (statuscodes.length === 0) {
-                  setLastdata([]);
-                }
-
-                else {
-                  let s = orders.filter(d => statuscodes.includes(d.status.code));
-                  setLastdata(s);
-                }
-
-              }}
-
-              style={{ 'margin-left': '10px', 'width': '45%' }}>
-              {
-                orderstatus.length != 0 ? orderstatus.map((u) =>
-                  <Option value={u.code}>{u.des}</Option>
-                ) : null
-
+              setSelectedKeys(statuscodes)
+              if (statuscodes.length === 0) {
+                setLastdata([]);
               }
 
-            </Select>
+              else {
+                let s = orders.filter(d => statuscodes.includes(d.status.code));
+                setLastdata(s);
+              }
 
-          </div>
-        </span>}
+            }}
 
-        extra={<span>
-          <>
-            <Button size='middle' style={{ 'margin-left': '10px' }}> <PrinterOutlined /> {formatMessage({ id: 'product.print' })}</Button>
-            <ExportXLS dataset={getXLSData(selectedKeys.length === 0 ? orders : lastdata)} sheetName={formatMessage({ id: 'menu.orders'})} collumns={getXLSColumns(columns)} />
-          </>
-        </span>} bordered={false}  >
+            style={{ 'margin-left': '10px', 'width': '45%' }}>
+            {
+              orderstatus.length != 0 ? orderstatus.map((u) =>
+                <Option value={u.code}>{u.des}</Option>
+              ) : null
 
-        <Table
-          size='middle'
-          actionRef={actionRef}
-          rowKey="id"
-          search={false}
-          onChange={(_, _filter, _sorter) => {
-            const sorterResult = _sorter;
-            if (sorterResult.field) {
-              setSorter(`${sorterResult.field}_${sorterResult.order}`);
             }
-          }}
 
-          params={{
-            sorter,
-          }}
-          expandedRowRender={expandedRowRender}
+          </Select>
 
-          dataSource={selectedKeys.length === 0 ? orders : lastdata}
-          columns={columns}
+        </div>
+      </span>}
 
-        />
-        <ConfirmOrder form={form} canceled={canceled} orderstatus={filterstatus} visible={visibleConfirm} onClickBack={() => setVisibleConfirm(false)}
-          confirmOrder={confirmOrder} handleSelectStatus={handleSelectStatus} />
+      extra={<span>
+        <>
+          <Button size='middle' style={{ 'margin-left': '10px' }}> <PrinterOutlined /> {formatMessage({ id: 'product.print' })}</Button>
+          <ExportXLS dataset={getXLSData(selectedKeys.length === 0 ? orders : lastdata)} sheetName={formatMessage({ id: 'menu.orders' })} collumns={getXLSColumns(columns)} />
+        </>
+      </span>} bordered={false}  >
 
-        <CancelOrder form={form2} visible={visibleCancel} onClickBack={() => setVisibleCancel(false)}
-          cancelOrder={cancelOrder} />
+      <Table
+        size='middle'
+        actionRef={actionRef}
+        rowKey="id"
+        search={false}
+        onChange={(_, _filter, _sorter) => {
+          const sorterResult = _sorter;
+          if (sorterResult.field) {
+            setSorter(`${sorterResult.field}_${sorterResult.order}`);
+          }
+        }}
 
-      </Card>
+        params={{
+          sorter,
+        }}
+        expandedRowRender={expandedRowRender}
+
+        dataSource={selectedKeys.length === 0 ? orders : lastdata}
+        columns={columns}
+
+      />
+      <ConfirmOrder form={form} canceled={canceled} orderstatus={filterstatus} visible={visibleConfirm} onClickBack={() => setVisibleConfirm(false)}
+        confirmOrder={confirmOrder} handleSelectStatus={handleSelectStatus} />
+
+      <CancelOrder form={form2} visible={visibleCancel} onClickBack={() => setVisibleCancel(false)}
+        cancelOrder={cancelOrder} />
+
+    </Card>
   );
 };
 

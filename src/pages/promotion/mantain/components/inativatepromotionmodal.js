@@ -14,7 +14,7 @@ const InativatePromotion = ({ handleCancelvisibleDeleteProduct,
   }
   return <Modal
     open={visible}
-    title={<Alert message={formatMessage({ id: 'delete.product.question' })} description={formatMessage({ id: 'delete.product.warning' })} type="error" showIcon />}
+    title={<Alert message={formatMessage({ id: 'inactivate.promotion.question' })} description={formatMessage({ id: 'delete.product.warning' })} type="error" showIcon />}
     footer={[
       <Button key="back" onClick={handleCancelvisibleDeleteProduct}>
         {formatMessage({ id: 'global.cancel' })}

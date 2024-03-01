@@ -66,10 +66,12 @@ const EditProduct = props => {
   const [fileNameHistories, setFileNameHistories] = useState([]);
   const history = useHistory();
   const [features, setFeatures] = useState(currentProduct.features);
+  const [services, setServices] = useState(currentProduct.services);
   const [formVals, setFormVals] = useState({
     description: currentProduct.description,
     name: currentProduct.name,
     sellprice: currentProduct.sellprice,
+    serviceprice:currentProduct.serviceprice,
     availablequantity: currentProduct.availablequantity,
     category: currentProduct.category ? currentProduct.category.id : '',
     subcategory: currentProduct.subcategory ? currentProduct.subcategory.id : '',
@@ -187,6 +189,8 @@ const EditProduct = props => {
   const onRemove = (file) => {
     let newName = fileNameHistories.filter((fh) => fh.originalName === file.originFileObj.name)[0].newName;
     deleteFile(newName);
+    fileNameHistories =  fileNameHistories.filter((fh) => fh.originalFileName != file.originFileObj.name)
+    setFileNameHistories(fileNameHistories);
   }
 
   const restart = () => {
@@ -196,6 +200,9 @@ const EditProduct = props => {
     setSuccess(false);
     setSavingProduct(false);
     setFeatures([]);
+    setFileNameHistories([]);
+    setFileList([]);
+    setServices([]);
     setSelectedRowKeys([]);
   }
 
@@ -248,6 +255,8 @@ const EditProduct = props => {
       filenames: fileNameHistories,
       featured, specialOffer,
       sellprice: formVals.sellprice,
+      serviceprice: formVals.serviceprice,
+      services,
       availablequantity: formVals.availablequantity,
       features: features,
       seller: currentUser,
@@ -338,7 +347,50 @@ const EditProduct = props => {
       );
     }
 
-    if (currentStep === 2 && newTaxType === true) {
+    if (currentStep === 2) {
+      return (
+        <>
+          <FormItem name="serviceType" label={formatMessage({ id: 'service.type' })}
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'service.type.required' }),
+              },
+            ]}
+          >
+
+            <Select
+              placeholder={formatMessage({ id: 'select.service.type' })}
+              onChange={(services) => {
+                setServices(services);
+              }}
+              mode='tags'
+            >
+              {
+                servicesList.map(s => <Option key={s.code}>{s.name} <span>{s.description} </span></Option>)
+              }
+            </Select>
+
+          </FormItem>
+          <FormItem name="serviceprice" label={formatMessage({ id: 'service.price' })}
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'service.price.required' }),
+              },
+            ]}
+          >
+            <Input suffix="MZN"
+              type='number'
+            />
+
+          </FormItem>
+
+        </>
+      );
+    }
+
+    if (currentStep === 3 && newTaxType === true) {
       return (
         <>
           <Form {...layout} form={form2}>
@@ -382,7 +434,7 @@ const EditProduct = props => {
     }
 
 
-    if (currentStep === 2 && newTaxType === false) {
+    if (currentStep === 3 && newTaxType === false) {
       return (
         <>
           <Button type='primary' style={{ 'margin-left': '76%', 'margin-button': '50px' }} onClick={addNewTaxType} >{formatMessage({ id: 'add.tax' })}</Button>
@@ -397,7 +449,7 @@ const EditProduct = props => {
       );
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       return (
         <>
           <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
@@ -406,6 +458,7 @@ const EditProduct = props => {
             <Descriptions.Item label={formatMessage({ id: 'product.category' })}>{formVals.category && categories.length != 0 ? categories.filter((c) => c.id === formVals.category)[0].name : ''}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.subcategory' })}>{formVals.subcategory && subcategoriesSubset.length != 0 ? subcategoriesSubset.filter((c) => c.id === formVals.subcategory)[0].name : ''}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.price' })}>  <Statistic value={formVals.sellprice} suffix="MZN" /> </Descriptions.Item>
+            <Descriptions.Item label={formatMessage({ id: 'service.price' })}>  <Statistic value={formVals.serviceprice} suffix="MZN" /> </Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.vehicle' })}>{formVals.vehicle}</Descriptions.Item>
           </Descriptions>
           <Divider ></Divider>
@@ -422,7 +475,7 @@ const EditProduct = props => {
       );
     }
 
-    if (currentStep === 4) {
+    if (currentStep === 5) {
       return (
         <>
           <Form {...formItemLayout} style={{ padding: '50px 0' }}>
@@ -596,7 +649,7 @@ const EditProduct = props => {
   };
 
   const renderFooter = () => {
-    if (currentStep === 1 || (currentStep === 2 && newTaxType === false && success === false)) {
+    if (currentStep === 1 || currentStep === 2 || (currentStep === 3 && newTaxType === false && success === false)) {
       return (
         <FormItem {...tailLayout}>
           <Button
@@ -613,7 +666,7 @@ const EditProduct = props => {
       );
     }
 
-    if (currentStep === 3 && newTaxType === false && success === false) {
+    if (currentStep === 4 && newTaxType === false && success === false) {
       return (
         <FormItem {...tailLayout}>
           <Button
@@ -656,7 +709,8 @@ const EditProduct = props => {
       >
         <Step title={formatMessage({ id: 'product.data' })} />
         <Step title={formatMessage({ id: 'product.initial.stock' })} />
-        <Step title={formatMessage({ id: 'product.taxes' })} />
+        <Step title={formatMessage({ id: 'service.list' })} />
+        <Step title={formatMessage({ id: 'product.keyfeatures' })} />
         <Step title={formatMessage({ id: 'global.confirmation.step' })} />
         <Step title={formatMessage({ id: 'global.success.step' })} />
       </Steps>
@@ -669,6 +723,7 @@ const EditProduct = props => {
           availablequantity: formVals.availablequantity,
           category: formVals.category,
           sellprice: formVals.sellprice,
+          serviceprice: formVals.sellprice,
           packagecount: formVals.packagecount,
 
         }}

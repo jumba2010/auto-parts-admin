@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { uploadFile, deleteFile } from '../../../utils/fileutils';
 import { categories, subcategories } from '../utils/categories';
 import { createProduct } from '@/services/product';
+import { servicesList } from '../utils/services';
 
 
 const formLayout = {
@@ -61,12 +62,9 @@ const CreateProduct = props => {
   const history = useHistory();
   const [features, setFeatures] = useState([]);
   const [featured, setFeatured] = useState(false);
+  const [services, setServices] = useState([]);
   const [specialOffer, setSpecialOffer] = useState(false);
   const [subcategoriesSubset, setSubcategoriesSubset] = useState([]);
-
-  const onSelectChange = selectedRowKeys => {
-    setSelectedRowKeys(selectedRowKeys);
-  };
 
 
   const columns = [
@@ -158,20 +156,22 @@ const CreateProduct = props => {
   }
 
   const onRemove = (file) => {
-    console.log(fileNameHistories)
     let newName = fileNameHistories.filter((fh) => fh.originalFileName === file.originFileObj.name)[0].url;
-    console.log(newName)
     deleteFile(newName);
+    fileNameHistories = fileNameHistories.filter((fh) => fh.originalFileName != file.originFileObj.name)
+    setFileNameHistories(fileNameHistories);
   }
 
   const restart = () => {
     form.resetFields();
-    setCurrentStep(currentStep - 4);
+    setCurrentStep(currentStep - 5);
     setNewTaxType(false);
     setSuccess(false);
     setSavingProduct(false);
+    setFileNameHistories([]);
+    setFileList([]);
+    setServices([]);
     setFeatures([]);
-    setSelectedRowKeys([]);
   }
 
   const extra = (
@@ -198,8 +198,14 @@ const CreateProduct = props => {
   const handleNext = async () => {
     const fieldsValue = await form.validateFields();
     setFormVals({ ...formVals, ...fieldsValue });
-
-    forward();
+    if (currentStep == 0 && fileNameHistories.length == 0) {
+      notification.error({
+        description: formatMessage({ id: 'file.required.description' }),
+        message: formatMessage({ id: 'file.required.error' }),
+      });
+    } else {
+      forward();
+    }
 
   };
 
@@ -223,6 +229,8 @@ const CreateProduct = props => {
       featured, specialOffer,
       filenames: fileNameHistories,
       sellprice: formVals.sellprice,
+      serviceprice: formVals.serviceprice,
+      services,
       availablequantity: formVals.availablequantity,
       features: features,
       seller: currentUser,
@@ -299,7 +307,7 @@ const CreateProduct = props => {
 
           <FormItem {...tailLayout}>
             <Row>
-            <Col span={3}/>
+              <Col span={3} />
               <Col span={21}>
                 <Checkbox
                   name="specialOffer"
@@ -318,7 +326,50 @@ const CreateProduct = props => {
       );
     }
 
-    if (currentStep === 2 && newTaxType === true) {
+    if (currentStep === 2) {
+      return (
+        <>
+          <FormItem name="serviceType" label={formatMessage({ id: 'service.type' })}
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'service.type.required' }),
+              },
+            ]}
+          >
+
+            <Select
+              placeholder={formatMessage({ id: 'select.service.type' })}
+              onChange={(services) => {
+                setServices(services);
+              }}
+              mode='tags'
+            >
+              {
+                servicesList.map(s => <Option key={s.code}>{s.name} <span>{s.description} </span></Option>)
+              }
+            </Select>
+
+          </FormItem>
+          <FormItem name="serviceprice" label={formatMessage({ id: 'service.price' })}
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'service.price.required' }),
+              },
+            ]}
+          >
+            <Input suffix="MZN"
+              type='number'
+            />
+
+          </FormItem>
+
+        </>
+      );
+    }
+
+    if (currentStep === 3 && newTaxType === true) {
       return (
         <>
           <Form {...layout} form={form2}>
@@ -362,7 +413,7 @@ const CreateProduct = props => {
     }
 
 
-    if (currentStep === 2 && newTaxType === false) {
+    if (currentStep === 3 && newTaxType === false) {
       return (
         <>
           <Button type='primary' style={{ 'margin-left': '76%', 'margin-button': '50px' }} onClick={addNewTaxType} >{formatMessage({ id: 'add.tax' })}</Button>
@@ -377,16 +428,16 @@ const CreateProduct = props => {
       );
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 4) {
       return (
         <>
-          <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
+            <Descriptions title={formatMessage({ id: 'product.data' })} column={2} >
             <Descriptions.Item label="Nome">{formVals.name}</Descriptions.Item>
-
             <Descriptions.Item label={formatMessage({ id: 'product.availablequantity' })}>{formVals.availablequantity}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.category' })}>{formVals.category && categories.length != 0 ? categories.filter((c) => c.id === formVals.category)[0].name : ''}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.subcategory' })}>{formVals.subcategory && subcategoriesSubset.length != 0 ? subcategoriesSubset.filter((c) => c.id === formVals.subcategory)[0].name : ''}</Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.price' })}>  <Statistic value={formVals.sellprice} suffix="MZN" /> </Descriptions.Item>
+            <Descriptions.Item label={formatMessage({ id: 'service.price' })}>  <Statistic value={formVals.serviceprice} suffix="MZN" /> </Descriptions.Item>
             <Descriptions.Item label={formatMessage({ id: 'product.vehicle' })}>{formVals.vehicle}</Descriptions.Item>
           </Descriptions>
           <Divider ></Divider>
@@ -403,7 +454,7 @@ const CreateProduct = props => {
       );
     }
 
-    if (currentStep === 4) {
+    if (currentStep === 5) {
       return (
         <>
           <Form {...formItemLayout} style={{ padding: '50px 0' }}>
@@ -505,7 +556,7 @@ const CreateProduct = props => {
               width: '100%',
             }}
             onChange={(category) => {
-    
+
               let subcategoriesSubset = subcategories.filter(s => s.categoryId === category);
               setSubcategoriesSubset(subcategoriesSubset);
 
@@ -555,7 +606,7 @@ const CreateProduct = props => {
         </FormItem>
         <FormItem {...tailLayout}>
           <Row>
-          <Col span={3}/>
+            <Col span={3} />
             <Col span={21}>
               <Checkbox
                 name="featured"
@@ -582,7 +633,7 @@ const CreateProduct = props => {
   };
 
   const renderFooter = () => {
-    if (currentStep === 1 || (currentStep === 2 && newTaxType === false && success === false)) {
+    if (currentStep === 1 || currentStep === 2 || (currentStep === 3 && newTaxType === false && success === false)) {
       return (
         <FormItem {...tailLayout}>
           <Button
@@ -599,7 +650,7 @@ const CreateProduct = props => {
       );
     }
 
-    if (currentStep === 3 && newTaxType === false && success === false) {
+    if (currentStep === 4 && newTaxType === false && success === false) {
       return (
         <FormItem {...tailLayout}>
           <Button
@@ -642,6 +693,7 @@ const CreateProduct = props => {
       >
         <Step title={formatMessage({ id: 'product.data' })} />
         <Step title={formatMessage({ id: 'product.initial.stock' })} />
+        <Step title={formatMessage({ id: 'service.list' })} />
         <Step title={formatMessage({ id: 'product.keyfeatures' })} />
         <Step title={formatMessage({ id: 'global.confirmation.step' })} />
         <Step title={formatMessage({ id: 'global.success.step' })} />

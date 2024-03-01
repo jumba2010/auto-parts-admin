@@ -1,5 +1,5 @@
 export default {
-  'promotion.startdate':'Data de Iniciao',
+  'promotion.startdate':'Data de Início',
   'promotion.enddate':'Data de Fim',
   'promotion.description':'Descrição',
   'promotion.percentage':'Percentagem',
@@ -16,4 +16,8 @@ export default {
   'global.inativate':'Inativar',
   'error.processing.request.title':'Erro ao Processar seu pedido',
   'error.processing.request.description':'Howve um erro ao processar o seu pedido. Por favor volte a tentar dentro de instantes. Se o erro persistir contacte a nossa equipa de suporte.',
+  'promotion.payload.undefined':'Sem Dados suficientes para cadastrar promoção',
+  'promotion.products.not.defined':'Não é possivel cadastrar promoção sem nenhum producto. Selecione pelo menos um produto ou marque a opção todos',
+  'product.in.active.promotion':'Um dos productos contido numa promoção activa',
+
 };

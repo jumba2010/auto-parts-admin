@@ -1,21 +1,19 @@
-export const TOKEN_KEY = "NMCTOKEN2019@123";
-export const SUCURSAL="SUCURSAL2019@1234"
-export const USER_KEY = "NMCUSER2019@123";
-export const G_MAP_KEY = "AIzaSyCdiVx3d0PMt9y0MjT_OnJX6EZXHpFvQ0Q";
+export const TOKEN_KEY = 'NMCTOKEN2019@123';
+export const SUCURSAL = 'SUCURSAL2019@1234';
+export const USER_KEY = 'NMCUSER2019@123';
+export const G_MAP_KEY = 'AIzaSyCdiVx3d0PMt9y0MjT_OnJX6EZXHpFvQ0Q';
 export const isAuthenticated = () => localStorage.getItem(USER_KEY) !== null;
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
-export const defaultPassword='sgs2020'
+export const defaultPassword = 'sgs2020';
 
-export const baseURL='http://localhost:3333'
+export const baseURL = 'https://q54hom8bhi.execute-api.us-east-1.amazonaws.com/staging1';
 
-export const login = (token) => {
+export const login = token => {
   localStorage.setItem(TOKEN_KEY, token);
 };
-export const getUserDetails = () =>localStorage.getItem(USER_KEY);
+export const getUserDetails = () => localStorage.getItem(USER_KEY);
 export const logout = () => {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);   
+  localStorage.removeItem(USER_KEY);
   localStorage.removeItem(SUCURSAL);
-
 };
-
